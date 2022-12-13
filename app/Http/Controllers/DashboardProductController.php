@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 
@@ -25,6 +26,11 @@ class DashboardProductController extends Controller
             'products' => Product::where('user_id', auth()->user()->id)->get()
         ]);
     }
+
+    public function create()
+    {
+        return view('dashboard.products.create');
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -38,6 +44,7 @@ class DashboardProductController extends Controller
         $file->move("gambar", $filename);
         $path = $request->getSchemeAndHttpHost() . "/gambar/" . $filename;
         $payload = [
+            "user_id" => auth()->user()->id,
             "name" => $request->input("name"),
             "price" => $request->input("price"),
             "photo" => $path,
@@ -45,7 +52,7 @@ class DashboardProductController extends Controller
             "stock" => $request->input("stock"),
         ];
         Product::create($payload);
-        return redirect('/product')->with('success', 'New Product has been added');
+        return redirect('/dashboard/products')->with('success', 'New Product has been added');
     }
 
     /**
@@ -56,7 +63,7 @@ class DashboardProductController extends Controller
      */
     public function show(Product $product)
     {
-        return view('product', [
+        return view('dashboard.products.show', [
 
             "product" => $product
         ]);
@@ -70,7 +77,7 @@ class DashboardProductController extends Controller
      */
     public function edit(Product $product)
     {
-        return view('product.edit', [
+        return view('dashboard.products.edit', [
             'product' => $product
         ]);
     }
@@ -104,7 +111,7 @@ class DashboardProductController extends Controller
         ];
 
         Product::where('id', $product->id)->update($payload);
-        return redirect('/product')->with('success', 'New Product has been updated');
+        return redirect('/dashboard/products')->with('success', 'New Product has been updated');
     }
 
     /**
@@ -118,6 +125,6 @@ class DashboardProductController extends Controller
         $photo = str_replace(request()->getSchemeAndHttpHost() . '/', "", $product->photo);
         File::delete($photo);
         Product::destroy($product->id);
-        return redirect('/product')->with('success', 'Post deleted!!');
+        return redirect('/dashboard/products')->with('success', 'Post deleted!!');
     }
 }

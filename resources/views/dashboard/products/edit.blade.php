@@ -1,4 +1,5 @@
-@extends('../layouts.main')
+@extends('dashboard.layouts.main')
+
 @section('container')
     <div class="d-flex justify-content-center mt-4">
 
@@ -6,7 +7,7 @@
             <div>
                 <h1>update Product</h1>
             </div>
-            <form method="post" action="/product/{{ $product->id }}" class="mb-5" enctype="multipart/form-data">
+            <form method="post" action="/dashboard/products/{{ $product->id }}" class="mb-5" enctype="multipart/form-data">
                 @method('put')
                 @csrf
                 <div class="mb-3">
@@ -19,10 +20,10 @@
                     <input type="text" class="form-control" id="price" name="price"
                         value="{{ old('price', $product->price) }}">
                 </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">deskripsi</label>
-                    <input type="text" class="form-control" id="description" name="description"
-                        value="{{ old('description', $product->description) }}">
+                <label for="description">Deskripsi</label>
+                <div class="form-floating">
+
+                    <textarea class="form-control" placeholder="Leave a description here" id="description" name="description">{{ old('description', $product->description) }}</textarea>
                 </div>
                 <div class="mb-3">
                     <label for="stock" class="form-label">stock</label>
@@ -34,6 +35,7 @@
                     <div class="card-body">
                     </div>
                 </div>
+                 <input type="hidden" name="hidden" value="{{ $product->photo }}">
                 <div class="mb-3">
                     <label for="photo" class="form-label">Default file input example</label>
                     <input class="form-control" type="file" id="photo" name="photo">
@@ -42,5 +44,4 @@
             </form>
         </div>
     </div>
-
-    @(endsection)
+@endsection

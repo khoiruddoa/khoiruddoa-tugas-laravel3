@@ -36,7 +36,8 @@ Route::get('/products/{product:id}', [ProductController::class, 'show']);
 
 Route::get('/login', [LoginController::class, 'index'])->name('login')->middleware('guest'); //untuk user yang belum login
 Route::post('/login', [LoginController::class, 'authenticate']);
-Route::post('/logout', [LoginController::class, 'logout']);
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth', 'admin');
+
 Route::get('/register', [RegisterController::class, 'index'])->middleware('guest');
 Route::post('/register', [RegisterController::class, 'store']);
 Route::get('/dashboard', function () {
@@ -45,4 +46,4 @@ Route::get('/dashboard', function () {
 Route::get('/dashboard/posts/checkSlug', [DashboardPostController::class, 'checkSlug'])->middleware('auth');
 Route::resource('/dashboard/posts', DashboardPostController::class)->middleware('auth'); //route memakai resource karena akan dibuatkan semua oleh laravel untuk crud
 Route::resource('/dashboard/categories', AdminCategoryController::class)->except('show')->middleware('admin');
-Route::resource('/dashboard/products', DashboardProductController::class)->except('show')->middleware('user');
+Route::resource('/dashboard/products', DashboardProductController::class)->middleware('auth');

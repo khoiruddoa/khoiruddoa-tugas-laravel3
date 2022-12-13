@@ -17,7 +17,10 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         if (auth()->guest() || !auth()->user()->role) {
-            abort(403);
+            return redirect('/dashboard')->with(
+                "msg",
+                "You are forbidden for this acces!"
+            );
         }
 
         return $next($request);
